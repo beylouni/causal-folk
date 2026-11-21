@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from lightgbm import LGBMClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -28,6 +27,10 @@ def get_tabpfn_classifier(
 
 def get_baseline_classifiers(random_state: int = 42) -> dict[str, Any]:
     """Return dictionary of standard baseline models."""
+    # Imported here, after torch, on purpose: on Apple Silicon macOS, loading LightGBM's
+    # OpenMP runtime before torch makes TabPFN crash with a segmentation fault.
+    from lightgbm import LGBMClassifier
+
     return {
         "LogisticRegression": Pipeline(
             [

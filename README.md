@@ -32,18 +32,22 @@ causal-folk/
 ├── docs/
 │   └── PROPOSAL.md             # Proposta submetida e referências
 ├── data/                       # Diretório local para os dados do Censo (ignorado no git)
+│   ├── prototype/              # SCM de brinquedo (X1, X2, S, Z) e os conjuntos gerados
 │   ├── raw/
 │   └── processed/
 ├── notebooks/                  # Notebooks Jupyter para prototipagem
-│   └── 01_folktables_exploration.ipynb
+│   ├── 01_folktables_exploration.ipynb
+│   └── 02_prototipo_tabpfn_shap.ipynb  # TabPFN + testes na variável espúria + SHAP
 ├── src/
 │   └── causal_foundations/     # Pacote Python com código reutilizável
 │       ├── __init__.py
-│       ├── data.py             # Funções de carga do Folktables (ACS PUMS)
-│       ├── scm.py              # Helpers para injeção de SCM e atalhos espúrios
-│       └── models.py           # Wrappers simples para TabPFN e baselines
+│       ├── data.py             # Carga do Folktables (ACS PUMS) e dos dados do protótipo
+│       ├── scm.py              # Injeção de SCM, atalhos espúrios e perturbações em teste
+│       ├── models.py           # Wrappers simples para TabPFN e baselines
+│       └── interpretability.py # SHAP exato e métricas de alinhamento causal
 └── tests/
-    └── test_basic.py           # Testes básicos de sanidade
+    ├── test_basic.py           # Testes básicos de sanidade
+    └── test_prototype.py       # Testes do pipeline do protótipo
 ```
 
 ---
@@ -77,3 +81,15 @@ Para começar a explorar os dados e prototipar os experimentos em conjunto:
 uv run jupyter lab
 ```
 Abra o notebook `notebooks/01_folktables_exploration.ipynb`.
+
+### 5. Rodar o protótipo (TabPFN + SHAP)
+O notebook `notebooks/02_prototipo_tabpfn_shap.ipynb` usa os conjuntos de `data/prototype/dados_scm.zip`
+para "treinar" o TabPFN, testar o modelo mexendo na variável espúria `S` e calcular SHAP.
+Os resultados são salvos em `results/prototipo/` (tabelas em CSV e gráficos em PNG na subpasta `figuras/`),
+que é ignorada pelo git.
+
+Na primeira execução o TabPFN baixa os pesos do modelo e pede para aceitar a licença da Prior Labs.
+Em um terminal interativo isso abre o navegador para login. Em ambientes sem navegador:
+1. Entre em https://ux.priorlabs.ai, aceite a licença na aba *Licenses*;
+2. Copie a API key em https://ux.priorlabs.ai/account;
+3. Rode `export TABPFN_TOKEN="<sua-api-key>"` antes de abrir o Jupyter.
