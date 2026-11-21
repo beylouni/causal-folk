@@ -41,3 +41,8 @@ As variáveis são geradas nesta ordem (causas antes dos efeitos):
 | invertido | −2,0 | totalmente invertida | −0,89 |
 
 Cada ambiente tem **2000 amostras** e é gerado com **5 seeds** (30 conjuntos no total). Há ainda um conjunto de treino separado (α = 2, seed 999).
+
+## Próxima etapa
+
+O notebook `notebooks/02_prototipo_tabpfn_shap.ipynb` carrega estes conjuntos direto do zip
+(`load_prototype_environments`), "treina" o TabPFN, testa o modelo mexendo em `S` e calcula SHAP.
